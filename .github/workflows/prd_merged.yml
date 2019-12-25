@@ -1,0 +1,63 @@
+env:
+  ACCESS_TOKEN: ${{ secrets.PRD_ACCESS_TOKEN }}
+  ID_TOKEN: ${{ secrets.PRD_ID_TOKEN }}
+  REFRESH_TOKEN: ${{ secrets.PRD_REFRESH_TOKEN }}
+  CLIENT_ID: ${{ secrets.PRD_CLIENT_ID }}
+  CLIENT_SECRET: ${{ secrets.PRD_CLIENT_SECRET }}
+  SCRIPT_ID: ${{ secrets.PRD_SCRIPT_ID }}
+on:
+  push:
+    branches:
+      - release
+    paths:
+      - '**/**.js'
+      - '**/**.ts'
+      - '**/**.gs'
+jobs:
+  merged-action:
+    runs-on: ubuntu-latest
+    steps:
+    - name: pull
+      uses: actions/checkout@master
+
+    - name: Node Install
+      run: | 
+       sudo apt install nodejs
+       sudo apt install npm
+
+    - name: Node Version
+      run: | 
+        echo "Node $(node -v)"
+        echo "Npm $(npm -v)"
+
+    - name: clasp install
+      run: sudo npm i @google/clasp -g
+
+    - name: generate clasprc.json _1
+      run: sudo sed -i -e "s/\"access_token\":\"dummy\"/\"access_token\":\"${ACCESS_TOKEN}\"/" clasprc.json
+
+    - name: generate clasprc.json _2
+      run: sudo sed -i -e "s/\"id_token\":\"dummy\"/\"id_token\":\"${ID_TOKEN}\"/" clasprc.json
+
+    - name: generate clasprc.json _3
+      run: sudo sed -i -e "s/\"clientId\":\"dummy\"/\"clientId\":\"${CLIENT_ID}\"/" clasprc.json
+
+    - name: generate clasprc.json _4
+      run: sudo sed -i -e "s/\"clientSecret\":\"dummy\"/\"clientSecret\":\"${CLIENT_SECRET}\"/" clasprc.json
+
+    - name: generate clasprc.json _5
+      run: sudo sed -i -e "s@\"refresh_token\":\"dummy\"@\"refresh_token\":\"${REFRESH_TOKEN}\"@" clasprc.json
+
+    - name: generate .clasp.json
+      run: |
+        sudo sed -i -e "s/\"scriptId\":\"dummy\"/\"scriptId\":\"${SCRIPT_ID}\"/" ./scripts/.clasp.json
+
+    - name: set clasprc
+      run: sudo cat clasprc.json > ~/.clasprc.json
+
+    - name: push
+      run: |
+        cd ./scripts
+        sudo clasp push --force
+
+
