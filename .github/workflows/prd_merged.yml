@@ -61,4 +61,6 @@ jobs:
         sudo clasp push --force
     
     - name: deploy
-      run: clasp deploy
+      run: |
+        cd ./scripts
+        sudo clasp deploy
