@@ -11,7 +11,7 @@ on:
       - master
     paths:
       - '**/**.js'
-      - '**/**.ts'
+      - '**/**.tc'
       - '**/**.gs'
 jobs:
   merged-action:

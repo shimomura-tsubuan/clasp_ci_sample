@@ -11,7 +11,7 @@ on:
       - release
     paths:
       - '**/**.js'
-      - '**/**.ts'
+      - '**/**.tc'
       - '**/**.gs'
 jobs:
   merged-action:
