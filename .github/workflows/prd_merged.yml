@@ -57,10 +57,10 @@ jobs:
 
     - name: push
       run: |
-        cd ./scripts
+        cd ./src
         sudo clasp push --force
     
     - name: deploy
       run: |
-        cd ./scripts
+        cd ./src
         sudo clasp deploy
